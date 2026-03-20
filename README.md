@@ -1,4 +1,4 @@
-# YT Drop 🎬
+# YT Drop 
 > Frontend no Vercel + Backend no Render — 100% gratuito para sempre
 
 ---
@@ -106,7 +106,7 @@ Para personalizar o nome:
 
 ---
 
-## PRONTO! 🎉
+## PRONTO! 
 
 - **Frontend:** `https://yt-drop.vercel.app` (qualquer pessoa do mundo acessa)
 - **Backend:** `https://yt-drop.onrender.com` (processa os downloads)
