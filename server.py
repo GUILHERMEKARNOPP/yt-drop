@@ -4,6 +4,16 @@ YT Drop — Backend para Render.com (grátis para sempre)
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import yt_dlp, os, threading, uuid, tempfile, time
+import base64
+
+# Carrega cookies do ambiente
+_cookies_b64 = os.environ.get('COOKIES_B64', '')
+if _cookies_b64:
+    with open('/tmp/cookies.txt', 'wb') as f:
+        f.write(base64.b64decode(_cookies_b64))
+    COOKIES_FILE = '/tmp/cookies.txt'
+else:
+    COOKIES_FILE = None
 
 app = Flask(__name__)
 CORS(app)
@@ -43,7 +53,8 @@ def info():
     'quiet': True,
     'no_warnings': True,
     'socket_timeout': 15,
-    'extractor_args': {'youtube': {'player_client': ['android']}},
+    **(({'cookiefile': COOKIES_FILE}) if COOKIES_FILE else {}),
+'extractor_args': {'youtube': {'player_client': ['android']}},
 }) as ydl:            meta = ydl.extract_info(url, download=False)
         return jsonify({
             'title':      meta.get('title', 'Sem título'),
@@ -76,6 +87,7 @@ def download():
                 'quiet':          True,
                 'no_warnings':    True,
                 'socket_timeout': 20,
+		**(({'cookiefile': COOKIES_FILE}) if COOKIES_FILE else {}),
                 'retries':        3,
 		'extractor_args': {'youtube': {'player_client': ['android']}},
             }
