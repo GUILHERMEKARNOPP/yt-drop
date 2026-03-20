@@ -39,8 +39,12 @@ def info():
     if not url:
         return jsonify({'error': 'URL ausente'}), 400
     try:
-        with yt_dlp.YoutubeDL({'quiet': True, 'no_warnings': True, 'socket_timeout': 15}) as ydl:
-            meta = ydl.extract_info(url, download=False)
+        with yt_dlp.YoutubeDL({
+    'quiet': True,
+    'no_warnings': True,
+    'socket_timeout': 15,
+    'extractor_args': {'youtube': {'player_client': ['android']}},
+}) as ydl:            meta = ydl.extract_info(url, download=False)
         return jsonify({
             'title':      meta.get('title', 'Sem título'),
             'duration':   meta.get('duration', 0),
@@ -73,6 +77,7 @@ def download():
                 'no_warnings':    True,
                 'socket_timeout': 20,
                 'retries':        3,
+		'extractor_args': {'youtube': {'player_client': ['android']}},
             }
             if 'MP3' in label.upper():
                 opts['postprocessors'] = [{
